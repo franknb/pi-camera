@@ -14,7 +14,8 @@ app = Flask(__name__)
 def gen():
     """Video streaming generator function."""
     while True:
-        frame = cv2.flip(cv2.imencode('.jpg', Cam.frame)[1], -1).tobytes()
+        frame = cv2.flip(Cam.frame, -1)
+        frame = cv2.imencode('.jpg', frame)[1].tobytes()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         time.sleep(0.01)
