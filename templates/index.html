@@ -4,20 +4,22 @@
         <div class="col-lg-8 offset-lg-2">
 
             <h2 class="mt-5">CAMERA APP</h2>
-            <form method="post" action="{{ url_for('tasks') }}" target="iframe-target">
-                <input type="submit" value="Left" name="left" />
-                <input type="submit" value="Right" name="right"/>
-                <input type="submit" value="Up" name="up" />
-                <input type="submit" value="Down" name="down" />
+            <form method="post" action="{{ url_for('tasks') }}" target="iframe-target" style="text-align: center;">
+                <div style="margin-bottom: 10px;">
+                    <input type="submit" value="Up" name="up" style="width: 80px; height: 40px;" />
+                </div>
+                <div>
+                    <input type="submit" value="Left" name="left" style="width: 80px; height: 40px; margin-right: 10px;" />
+                    <input type="submit" value="Right" name="right" style="width: 80px; height: 40px;"/>
+                </div>
+                <div style="margin-top: 10px;">
+                    <input type="submit" value="Down" name="down" style="width: 80px; height: 40px;" />
+                </div>
             </form>
 
             <iframe name="iframe-target" id="iframe-target" style="display:none;"></iframe>
 
             <img src="{{ url_for('video_feed') }}" height="480" width="640">
-            <h3 style="font-family:courier;">Instructions:</h3>
-            <ol style="font-family:courier;">
-                <li>Use the buttons above to adjust the camera angle</li>
-            </ol>
 
         </div>
     </div>
