@@ -1,20 +1,23 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-lg-8  offset-lg-2">
+        <div class="col-lg-8 offset-lg-2">
 
             <h2 class="mt-5">CAMERA APP</h2>
-			<form method="post" action="{{ url_for('tasks') }}">
-			<input type="submit" value="Left" name="left" />
-			<input type="submit" value="Right" name="right"/>
-			<input type="submit" value="Up" name="up" />
-			<input type="submit" value="Down" name="down" />
-			</form>
+            <form method="post" action="{{ url_for('tasks') }}" target="iframe-target">
+                <input type="submit" value="Left" name="left" />
+                <input type="submit" value="Right" name="right"/>
+                <input type="submit" value="Up" name="up" />
+                <input type="submit" value="Down" name="down" />
+            </form>
+
+            <iframe name="iframe-target" id="iframe-target" style="display:none;"></iframe>
 
             <img src="{{ url_for('video_feed') }}" height="480" width="640">
-			<h3 style="font-family:courier;">Instructions:</h3>
-			<ol style="font-family:courier;">
-			<li>Use the buttons above to adjust the camera angle</li> </ol>
+            <h3 style="font-family:courier;">Instructions:</h3>
+            <ol style="font-family:courier;">
+                <li>Use the buttons above to adjust the camera angle</li>
+            </ol>
 
         </div>
     </div>
