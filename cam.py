@@ -15,6 +15,7 @@ def gen():
     """Video streaming generator function."""
     while True:
         frame = cv2.flip(Cam.frame, -1)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame = cv2.imencode('.jpg', frame)[1].tobytes()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
