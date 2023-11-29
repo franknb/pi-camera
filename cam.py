@@ -20,7 +20,7 @@ def gen():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', pan_angle=Cam.panAngle, tilt_angle=Cam.tiltAngle)
 
 
 @app.route('/video_feed')
@@ -33,10 +33,10 @@ def video_feed():
 def tasks():
     if request.method == 'POST':
         if request.form.get('left') == 'Left':
-            Cam.panAngle -= 5
+            Cam.panAngle += 5
             pass
         elif request.form.get('right') == 'Right':
-            Cam.panAngle += 5
+            Cam.panAngle -= 5
             pass
         elif request.form.get('up') == 'Up':
             Cam.tiltAngle -= 5
@@ -46,8 +46,8 @@ def tasks():
             pass
 
     elif request.method == 'GET':
-        return render_template('index.html')
-    return render_template('index.html')
+        return render_template('index.html', pan_angle=Cam.panAngle, tilt_angle=Cam.tiltAngle)
+    return render_template('index.html', pan_angle=Cam.panAngle, tilt_angle=Cam.tiltAngle)
 
 
 def web_camera_start():
