@@ -1,6 +1,6 @@
 import threading
-from picamera2 import Picamera2
-import os
+from picamera2 import Picamera2, Preview
+from libcamera import Transform
 import cv2
 from servo import Servo
 from flask import Flask, render_template, Response, request
@@ -67,6 +67,9 @@ class Cam:
     def camera_start():
         flask_thread = None
         picam2 = Picamera2()
+        picam2.configure(picam2.preview_configuration({"size": (1280, 1024)}))
+        picam2.start_preview(Preview.DRM)
+        transform = Transform(hflip=1, vflip=1)
         picam2.start()
         while True:
             frame = picam2.capture_array()
