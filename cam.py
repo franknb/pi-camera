@@ -14,13 +14,14 @@ app = Flask(__name__)
 def gen():
     """Video streaming generator function."""
     while True:
+        frame = cv2.flip(frame, -1)
         frame = cv2.imencode('.jpg', Cam.frame)[1].tobytes()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-        time.sleep(0.03)
+        time.sleep(0.01)
 
 
-@app.route('/mjpg')
+@app.route('/')
 def video_feed():
     # from camera import Camera
     """Video streaming route. Put this in the src attribute of an img tag."""
