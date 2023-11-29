@@ -1,5 +1,5 @@
 import threading
-from picamera2 import PiCamera2
+from picamera2 import Picamera2
 from multiprocessing import Process, Manager
 import os
 import cv2
@@ -44,7 +44,7 @@ class Cam:
     @staticmethod
     def camera_start():
         flask_thread = None
-        picam2 = PiCamera2()
+        picam2 = Picamera2()
         picam2.start()
         while True:
             frame = picam2.capture_array()
