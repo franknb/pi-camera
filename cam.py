@@ -2,8 +2,7 @@ import threading
 from picamera2 import Picamera2
 import os
 import cv2
-import time
-
+from servo import Servo
 from flask import Flask, render_template, Response, request
 
 os.environ['FLASK_ENV'] = 'development'
@@ -34,16 +33,16 @@ def video_feed():
 def tasks():
     if request.method == 'POST':
         if request.form.get('left') == 'Left':
-            print('left')
+            Cam.panAngle -= 5
             pass
         elif request.form.get('right') == 'Right':
-            print('right')
+            Cam.panAngle += 5
             pass
         elif request.form.get('up') == 'Up':
-            print('up')
+            Cam.tiltAngle -= 5
             pass
         elif request.form.get('down') == 'Down':
-            print('down')
+            Cam.tiltAngle += 5
             pass
 
     elif request.method == 'GET':
@@ -60,6 +59,10 @@ def web_camera_start():
 
 class Cam:
     frame = None
+    pan = Servo(pin=13, max_angle=90, min_angle=-90)
+    tilt = Servo(pin=12, max_angle=30, min_angle=-90)
+    panAngle = 0
+    tiltAngle = 0
 
     @staticmethod
     def camera_start():
@@ -73,6 +76,8 @@ class Cam:
                 flask_thread.setDaemon(True)
                 flask_thread.start()
             Cam.frame = frame
+            Cam.pan.set_angle(Cam.panAngle)
+            Cam.tilt.set_angle(Cam.tiltAngle)
 
 
 if __name__ == '__main__':
