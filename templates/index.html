@@ -5,21 +5,21 @@
 
             <h2 class="mt-5">CAMERA APP</h2>
             <form method="post" action="{{ url_for('tasks') }}" target="iframe-target" style="text-align: center;">
-                <div style="margin-bottom: 10px;">
-                    <input type="submit" value="Up" name="up" style="width: 80px; height: 40px;" />
+                <div style="margin-bottom: 50px;">
+                    <input type="submit" value="Up" name="up" style="width: 240px; height: 120px;" />
                 </div>
                 <div>
-                    <input type="submit" value="Left" name="left" style="width: 80px; height: 40px; margin-right: 10px;" />
-                    <input type="submit" value="Right" name="right" style="width: 80px; height: 40px;"/>
+                    <input type="submit" value="Left" name="left" style="width: 240px; height: 120px; margin-right: 200px;" />
+                    <input type="submit" value="Right" name="right" style="width: 240px; height: 120px;"/>
                 </div>
-                <div style="margin-top: 10px;">
-                    <input type="submit" value="Down" name="down" style="width: 80px; height: 40px;" />
+                <div style="margin-top: 50px;">
+                    <input type="submit" value="Down" name="down" style="width: 240px; height: 120px;" />
                 </div>
             </form>
 
             <iframe name="iframe-target" id="iframe-target" style="display:none;"></iframe>
 
-            <img src="{{ url_for('video_feed') }}" height="480" width="640">
+            <img src="{{ url_for('video_feed') }}" height="972" width="1296">
 
         </div>
     </div>
