@@ -5,7 +5,6 @@ import cv2
 from servo import Servo
 from flask import Flask, render_template, Response, request
 
-os.environ['FLASK_ENV'] = 'development'
 app = Flask(__name__)
 
 
@@ -73,7 +72,6 @@ class Cam:
             frame = picam2.capture_array()
             if flask_thread is None or not flask_thread.is_alive():
                 flask_thread = threading.Thread(name='flask_thread', target=web_camera_start)
-                flask_thread.setDaemon(True)
                 flask_thread.start()
             Cam.frame = frame
             Cam.pan.set_angle(Cam.panAngle)
