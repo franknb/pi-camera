@@ -66,7 +66,7 @@ class Cam:
     def camera_start():
         flask_thread = None
         picam2 = Picamera2()
-        config = picam2.create_preview_configuration(main={"size": (640, 480)}, transform=Transform(hflip=1, vflip=1))
+        config = picam2.create_preview_configuration(main={"size": (1280, 960)}, transform=Transform(hflip=1, vflip=1))
         picam2.configure(config)
         picam2.start_preview()
         picam2.start()
