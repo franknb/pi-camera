@@ -33,18 +33,17 @@ def video_feed():
 @app.route('/requests', methods=['POST', 'GET'])
 def tasks():
     if request.method == 'POST':
-        if request.form.get('click') == 'Capture':
-            print(1)
+        if request.form.get('left') == 'Left':
+            print('left')
             pass
-        elif request.form.get('grey') == 'Grey':
+        elif request.form.get('right') == 'Right':
+            print('right')
             pass
-        elif request.form.get('neg') == 'Negative':
+        elif request.form.get('up') == 'Up':
+            print('up')
             pass
-        elif request.form.get('face') == 'Face Only':
-            pass
-        elif request.form.get('stop') == 'Stop/Start':
-            pass
-        elif request.form.get('rec') == 'Start/Stop Recording':
+        elif request.form.get('down') == 'Down':
+            print('down')
             pass
 
     elif request.method == 'GET':
