@@ -26,9 +26,9 @@ cd pi-camera
 python cam.py
 ```
 
-## Object detection (MobileNet-SSD)
+## Object detection (YOLOv5n ONNX)
 
-The app overlays MobileNet-SSD detections using OpenCV DNN (Caffe models) on CPU.
+The app overlays YOLOv5n detections using OpenCV DNN (ONNX) on CPU.
 
 1) Install dependencies on the Pi (CPU only):
 ```bash
@@ -37,15 +37,15 @@ sudo apt-get install -y python3-opencv
 pip install numpy
 ```
 
-2) Download the MobileNet-SSD model and prototxt (note: the repo has no Releases, so use direct raw links):
+2) Download the YOLOv5n ONNX model (~7MB):
 ```bash
 mkdir -p models
-wget -O models/MobileNetSSD_deploy.caffemodel https://github.com/chuanqi305/MobileNet-SSD/raw/master/mobilenet_iter_73000.caffemodel
-wget -O models/MobileNetSSD_deploy.prototxt.txt https://raw.githubusercontent.com/chuanqi305/MobileNet-SSD/master/deploy.prototxt
+wget -O models/yolov5n.onnx https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5n.onnx
 ```
 
-3) Start the app normally. If the files exist, detections run every few frames and boxes/labels are drawn on the stream.
+3) Start the app normally. If the file exists, detections run every few frames and boxes/labels are drawn on the stream.
 
 Notes:
-- If performance is low, increase `detection_every_n_frames` or reduce image size.
-- To disable detection, remove the files or set `Cam.detector = None` early in `camera_start()`.
+- Use the v6.0 YOLOv5n ONNX linked above; some ONNX exports may not be compatible with OpenCV DNN. The code uses 640x640 input size.
+- If performance is low, increase `detection_every_n_frames` or reduce camera resolution.
+- To disable detection, remove the model file or set `Cam.detector = None` early in `camera_start()`.
