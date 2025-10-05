@@ -5,6 +5,10 @@ from libcamera import Transform
 import cv2
 import numpy as np
 from servo import Servo
+try:
+    import onnxruntime as ort  # Prefer ONNX Runtime when available
+except Exception:
+    ort = None
 from flask import Flask, render_template, Response, request, jsonify, make_response
 
 app = Flask(__name__)
@@ -118,19 +122,32 @@ class Cam:
         last_servo_apply = 0
         frame_idx = 0
 
-        # Initialize detector (YOLOv5n ONNX only)
+        # Initialize detector (prefer ONNX Runtime; fallback to OpenCV DNN)
         if Cam.detector is None:
-            try:
-                Cam.detector = YoloV5OnnxDetector(
-                    model_path='models/yolov5n.onnx',
-                    conf_threshold=0.35,
-                    iou_threshold=0.45,
-                    input_size=640
-                )
-                print('YOLOv5n ONNX detector loaded')
-            except Exception as e:
-                print('YOLOv5n not available:', e)
-                Cam.detector = None
+            if ort is not None:
+                try:
+                    Cam.detector = YoloV5OnnxRuntimeDetector(
+                        model_path='models/yolov5n.onnx',
+                        conf_threshold=0.35,
+                        iou_threshold=0.45,
+                        input_size=640
+                    )
+                    print('YOLOv5n ONNX Runtime detector loaded')
+                except Exception as e:
+                    print('ONNX Runtime detector failed:', e)
+                    Cam.detector = None
+            if Cam.detector is None:
+                try:
+                    Cam.detector = YoloV5OnnxDetector(
+                        model_path='models/yolov5n.onnx',
+                        conf_threshold=0.35,
+                        iou_threshold=0.45,
+                        input_size=640
+                    )
+                    print('YOLOv5n OpenCV DNN detector loaded')
+                except Exception as e:
+                    print('YOLOv5n OpenCV DNN not available:', e)
+                    Cam.detector = None
         while True:
             # Picamera2 capture_array returns RGB; convert to BGR for OpenCV JPEG encoding
             rgb = picam2.capture_array()
@@ -267,6 +284,70 @@ class YoloV5OnnxDetector:
             ((tw, th), _) = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
             cv2.rectangle(image_bgr, (x, y - th - 6), (x + tw + 6, y), color, -1)
             cv2.putText(image_bgr, label, (x + 3, y - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (20, 20, 20), 1, cv2.LINE_AA)
+
+
+class YoloV5OnnxRuntimeDetector:
+    COCO_CLASSES = YoloV5OnnxDetector.COCO_CLASSES
+
+    def __init__(self, model_path: str, conf_threshold: float = 0.35, iou_threshold: float = 0.45, input_size: int = 640):
+        if ort is None:
+            raise RuntimeError('onnxruntime not available')
+        self.session = ort.InferenceSession(model_path, providers=["CPUExecutionProvider"])  # CPU on Pi
+        self.input_name = self.session.get_inputs()[0].name
+        self.output_name = self.session.get_outputs()[0].name
+        self.conf_threshold = conf_threshold
+        self.iou_threshold = iou_threshold
+        self.input_size = input_size
+
+    def detect(self, image_bgr):
+        h, w = image_bgr.shape[:2]
+        size = self.input_size
+        # Preprocess: BGR->RGB, resize, normalize
+        img = cv2.resize(image_bgr, (size, size))
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype(np.float32) / 255.0
+        img = np.transpose(img, (2, 0, 1))  # CHW
+        img = np.expand_dims(img, 0)  # NCHW
+        outputs = self.session.run([self.output_name], {self.input_name: img})
+        preds = outputs[0]  # shape: (1, N, 85) or (N, 85)
+        if preds.ndim == 3:
+            preds = np.squeeze(preds, axis=0)
+
+        boxes = []
+        confidences = []
+        class_ids = []
+        for det in preds:
+            cx, cy, bw, bh = det[0:4]
+            obj_conf = det[4]
+            class_scores = det[5:]
+            class_id = int(np.argmax(class_scores))
+            class_conf = class_scores[class_id]
+            score = obj_conf * class_conf
+            if score < self.conf_threshold:
+                continue
+            x = int((cx - bw / 2) * w / self.input_size)
+            y = int((cy - bh / 2) * h / self.input_size)
+            width = int(bw * w / self.input_size)
+            height = int(bh * h / self.input_size)
+            boxes.append([x, y, width, height])
+            confidences.append(float(score))
+            class_ids.append(class_id)
+
+        idxs = cv2.dnn.NMSBoxes(boxes, confidences, self.conf_threshold, self.iou_threshold)
+        results = []
+        if len(idxs) > 0:
+            for i in idxs.flatten():
+                x, y, width, height = boxes[i]
+                results.append({
+                    'bbox': [x, y, width, height],
+                    'score': confidences[i],
+                    'class_id': class_ids[i],
+                    'label': self.COCO_CLASSES[class_ids[i]] if class_ids[i] < len(self.COCO_CLASSES) else str(class_ids[i])
+                })
+        return results
+
+    def draw(self, image_bgr, detections):
+        # Reuse the same drawing style
+        YoloV5OnnxDetector.draw(self, image_bgr, detections)
 
 if __name__ == '__main__':
     Cam().camera_start()
