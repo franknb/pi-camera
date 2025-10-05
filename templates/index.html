@@ -81,8 +81,8 @@ function stopRepeat(){
 document.querySelectorAll('button.ctl').forEach(btn=>{
   btn.addEventListener('mousedown', ()=>{
     const act = btn.getAttribute('data-action');
-    const payload = act==='left'?{deltaPan:-3}:{
-      ...(act==='right'?{deltaPan:3}:{})
+    const payload = act==='left'?{deltaPan:3}:{
+      ...(act==='right'?{deltaPan:-3}:{})
     };
     if(act==='up') payload.deltaTilt=-3;
     if(act==='down') payload.deltaTilt=3;
@@ -90,7 +90,7 @@ document.querySelectorAll('button.ctl').forEach(btn=>{
   });
   btn.addEventListener('mouseup', stopRepeat);
   btn.addEventListener('mouseleave', stopRepeat);
-  btn.addEventListener('touchstart', (e)=>{ e.preventDefault(); const act = btn.getAttribute('data-action'); const p={}; if(act==='left')p.deltaPan=-3; if(act==='right')p.deltaPan=3; if(act==='up')p.deltaTilt=-3; if(act==='down')p.deltaTilt=3; startRepeat(p); }, {passive:false});
+  btn.addEventListener('touchstart', (e)=>{ e.preventDefault(); const act = btn.getAttribute('data-action'); const p={}; if(act==='left')p.deltaPan=3; if(act==='right')p.deltaPan=-3; if(act==='up')p.deltaTilt=-3; if(act==='down')p.deltaTilt=3; startRepeat(p); }, {passive:false});
   btn.addEventListener('touchend', stopRepeat);
 });
 
@@ -101,8 +101,8 @@ centerBtn.addEventListener('click', async ()=>{
 
 document.addEventListener('keydown', (e)=>{
   if(e.repeat) return;
-  if(e.key==='ArrowLeft') startRepeat({deltaPan:-3});
-  if(e.key==='ArrowRight') startRepeat({deltaPan:3});
+  if(e.key==='ArrowLeft') startRepeat({deltaPan:3});
+  if(e.key==='ArrowRight') startRepeat({deltaPan:-3});
   if(e.key==='ArrowUp') startRepeat({deltaTilt:-3});
   if(e.key==='ArrowDown') startRepeat({deltaTilt:3});
   if(e.key==='c' || e.key==='C') fetch('/api/center', {method:'POST'}).then(fetchState);
