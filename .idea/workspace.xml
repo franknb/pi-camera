@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7e04b625-b042-4670-9c5f-c8bd825e2dfe" name="Changes" comment="update readme" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="2YYltRGAyHTzQ4aW9TQF0yYXYlN" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/frank/workspace/pi-camera",
+    "settings.editor.selected.configurable": "fileTemplates"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-14705d77f0bb-aa17d162503b-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-243.25659.43" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7e04b625-b042-4670-9c5f-c8bd825e2dfe" name="Changes" comment="" />
+      <created>1700710607914</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1700710607914</updated>
+    </task>
+    <task id="LOCAL-00001" summary="add servo.py">
+      <created>1700710853905</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1700710853905</updated>
+    </task>
+    <task id="LOCAL-00002" summary="add cam.py">
+      <created>1701229074569</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1701229074569</updated>
+    </task>
+    <task id="LOCAL-00003" summary="add cam.py">
+      <created>1701229161177</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1701229161177</updated>
+    </task>
+    <task id="LOCAL-00004" summary="add cam.py">
+      <created>1701229412588</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1701229412588</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add cam.py">
+      <created>1701229507107</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1701229507107</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add cam.py">
+      <created>1701229550643</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1701229550643</updated>
+    </task>
+    <task id="LOCAL-00007" summary="add cam.py">
+      <created>1701229736050</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1701229736050</updated>
+    </task>
+    <task id="LOCAL-00008" summary="add index.html">
+      <created>1701231131964</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1701231131964</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add index.html">
+      <created>1701231628170</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1701231628170</updated>
+    </task>
+    <task id="LOCAL-00010" summary="add servo functions to flask app">
+      <created>1701231963533</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1701231963533</updated>
+    </task>
+    <task id="LOCAL-00011" summary="add servo functions to flask app">
+      <created>1701232351416</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1701232351416</updated>
+    </task>
+    <task id="LOCAL-00012" summary="add servo functions to flask app">
+      <created>1701232696536</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1701232696536</updated>
+    </task>
+    <task id="LOCAL-00013" summary="add servo functions to flask app">
+      <created>1701232777855</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1701232777855</updated>
+    </task>
+    <task id="LOCAL-00014" summary="add iframe">
+      <created>1701268284527</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1701268284527</updated>
+    </task>
+    <task id="LOCAL-00015" summary="update index.html">
+      <created>1701269073548</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1701269073548</updated>
+    </task>
+    <task id="LOCAL-00016" summary="update index.html">
+      <created>1701269833773</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1701269833773</updated>
+    </task>
+    <task id="LOCAL-00017" summary="update index.html">
+      <created>1701269985723</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1701269985723</updated>
+    </task>
+    <task id="LOCAL-00018" summary="update index.html">
+      <created>1701270009015</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1701270009015</updated>
+    </task>
+    <task id="LOCAL-00019" summary="update index.html">
+      <created>1701270047503</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1701270047503</updated>
+    </task>
+    <task id="LOCAL-00020" summary="update index.html">
+      <created>1701270066749</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1701270066749</updated>
+    </task>
+    <task id="LOCAL-00021" summary="update index.html">
+      <created>1701270207817</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1701270207817</updated>
+    </task>
+    <task id="LOCAL-00022" summary="update index.html">
+      <created>1701270460315</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1701270460315</updated>
+    </task>
+    <task id="LOCAL-00023" summary="update index.html">
+      <created>1701270545426</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1701270545426</updated>
+    </task>
+    <task id="LOCAL-00024" summary="update readme">
+      <option name="closed" value="true" />
+      <created>1759693220214</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1759693220214</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add servo.py" />
+    <MESSAGE value="add cam.py" />
+    <MESSAGE value="add index.html" />
+    <MESSAGE value="add servo functions to flask app" />
+    <MESSAGE value="add iframe" />
+    <MESSAGE value="update index.html" />
+    <MESSAGE value="update readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="update readme" />
+  </component>
+</project>
