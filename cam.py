@@ -118,13 +118,18 @@ class Cam:
         last_servo_apply = 0
         frame_idx = 0
 
-        # Try to initialize detector (optional)
+        # Initialize detector (MobileNet-SSD only)
         if Cam.detector is None:
             try:
-                Cam.detector = YoloV5OnnxDetector(model_path='models/yolov5n.onnx', conf_threshold=0.35, iou_threshold=0.45, input_size=640)
-                print('YOLOv5n ONNX detector loaded')
-            except Exception as e:
-                print('Detector not available:', e)
+                Cam.detector = SsdCaffeDetector(
+                    prototxt_path='models/MobileNetSSD_deploy.prototxt.txt',
+                    model_path='models/MobileNetSSD_deploy.caffemodel',
+                    conf_threshold=0.4,
+                    input_size=300
+                )
+                print('MobileNet-SSD detector loaded')
+            except Exception as e2:
+                print('SSD not available:', e2)
                 Cam.detector = None
         while True:
             # Picamera2 capture_array returns RGB; convert to BGR for OpenCV JPEG encoding
@@ -180,92 +185,65 @@ class Cam:
             'panMax': Cam.pan.max_angle,
             'tiltMin': Cam.tilt.min_angle,
             'tiltMax': Cam.tilt.max_angle,
-            'detector': 'yolov5n' if Cam.detector is not None else 'none',
+            'detector': 'mobilenet-ssd' if Cam.detector is not None else 'none',
         }
 
 
-class YoloV5OnnxDetector:
-    # COCO class names (80 classes)
-    COCO_CLASSES = [
-        'person','bicycle','car','motorcycle','airplane','bus','train','truck','boat','traffic light',
-        'fire hydrant','stop sign','parking meter','bench','bird','cat','dog','horse','sheep','cow',
-        'elephant','bear','zebra','giraffe','backpack','umbrella','handbag','tie','suitcase',
-        'frisbee','skis','snowboard','sports ball','kite','baseball bat','baseball glove','skateboard','surfboard','tennis racket',
-        'bottle','wine glass','cup','fork','knife','spoon','bowl','banana','apple','sandwich',
-        'orange','broccoli','carrot','hot dog','pizza','donut','cake','chair','couch','potted plant',
-        'bed','dining table','toilet','tv','laptop','mouse','remote','keyboard','cell phone','microwave',
-        'oven','toaster','sink','refrigerator','book','clock','vase','scissors','teddy bear','hair drier','toothbrush'
+class SsdCaffeDetector:
+    # 20-class PASCAL VOC label set used by MobileNet-SSD
+    CLASSES = [
+        "background", "aeroplane", "bicycle", "bird", "boat",
+        "bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
+        "dog", "horse", "motorbike", "person", "pottedplant",
+        "sheep", "sofa", "train", "tvmonitor"
     ]
 
-    def __init__(self, model_path: str, conf_threshold: float = 0.35, iou_threshold: float = 0.45, input_size: int = 640):
-        self.net = cv2.dnn.readNetFromONNX(model_path)
-        # Force CPU backend/target for compatibility
+    def __init__(self, prototxt_path: str, model_path: str, conf_threshold: float = 0.4, input_size: int = 300):
+        self.net = cv2.dnn.readNetFromCaffe(prototxt_path, model_path)
         try:
             self.net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
             self.net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
         except Exception:
             pass
         self.conf_threshold = conf_threshold
-        self.iou_threshold = iou_threshold
-        self.input_size = input_size  # square size
+        self.input_size = input_size
 
     def detect(self, image_bgr):
         h, w = image_bgr.shape[:2]
         size = self.input_size
-        blob = cv2.dnn.blobFromImage(image_bgr, scalefactor=1/255.0, size=(size, size), mean=(0,0,0), swapRB=True, crop=False)
+        blob = cv2.dnn.blobFromImage(cv2.resize(image_bgr, (size, size)), 0.007843, (size, size), 127.5)
         self.net.setInput(blob)
-        try:
-            preds = self.net.forward()
-        except Exception as e:
-            # If the ONNX opset is incompatible, fail gracefully
-            return []
-        preds = np.squeeze(preds, axis=0)
-
-        boxes = []
-        confidences = []
-        class_ids = []
-
-        for det in preds:
-            cx, cy, bw, bh = det[0:4]
-            obj_conf = det[4]
-            class_scores = det[5:]
-            class_id = int(np.argmax(class_scores))
-            class_conf = class_scores[class_id]
-            score = obj_conf * class_conf
-            if score < self.conf_threshold:
-                continue
-            # Convert from center-based to top-left
-            x = int((cx - bw / 2) * w / self.input_size)
-            y = int((cy - bh / 2) * h / self.input_size)
-            width = int(bw * w / self.input_size)
-            height = int(bh * h / self.input_size)
-            boxes.append([x, y, width, height])
-            confidences.append(float(score))
-            class_ids.append(class_id)
-
-        idxs = cv2.dnn.NMSBoxes(boxes, confidences, self.conf_threshold, self.iou_threshold)
+        detections = self.net.forward()
         results = []
-        if len(idxs) > 0:
-            for i in idxs.flatten():
-                x, y, width, height = boxes[i]
-                results.append({
-                    'bbox': [x, y, width, height],
-                    'score': confidences[i],
-                    'class_id': class_ids[i],
-                    'label': self.COCO_CLASSES[class_ids[i]] if class_ids[i] < len(self.COCO_CLASSES) else str(class_ids[i])
-                })
+        # detections shape: (1, 1, N, 7): [image_id, class_id, confidence, x1, y1, x2, y2]
+        for i in range(detections.shape[2]):
+            confidence = float(detections[0, 0, i, 2])
+            if confidence < self.conf_threshold:
+                continue
+            class_id = int(detections[0, 0, i, 1])
+            x1 = int(detections[0, 0, i, 3] * w)
+            y1 = int(detections[0, 0, i, 4] * h)
+            x2 = int(detections[0, 0, i, 5] * w)
+            y2 = int(detections[0, 0, i, 6] * h)
+            results.append({
+                'bbox': [x1, y1, x2 - x1, y2 - y1],
+                'score': confidence,
+                'class_id': class_id,
+                'label': self.CLASSES[class_id] if class_id < len(self.CLASSES) else str(class_id)
+            })
         return results
 
     def draw(self, image_bgr, detections):
         for det in detections:
             x, y, w_, h_ = det['bbox']
             x2, y2 = x + w_, y + h_
-            color = (0, 170, 255)
+            color = (0, 255, 0)
             cv2.rectangle(image_bgr, (x, y), (x2, y2), color, 2)
             label = f"{det['label']} {det['score']:.2f}"
             ((tw, th), _) = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
-            cv2.rectangle(image_bgr, (x, y - th - 6), (x + tw + 6, y), color, -1)
-            cv2.putText(image_bgr, label, (x + 3, y - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (20, 20, 20), 1, cv2.LINE_AA)
+            y_label = y - th - 6 if y - th - 6 > 0 else y + th + 6
+            cv2.rectangle(image_bgr, (x, y_label - th - 2), (x + tw + 6, y_label + 2), color, -1)
+            cv2.putText(image_bgr, label, (x + 3, y_label), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (20, 20, 20), 1, cv2.LINE_AA)
 
 
 if __name__ == '__main__':
