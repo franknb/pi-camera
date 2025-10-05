@@ -39,9 +39,9 @@ def tasks():
     # Legacy form controls (kept for backward compatibility)
     if request.method == 'POST':
         if request.form.get('left') == 'Left':
-            Cam.adjust_angles(delta_pan=-5, delta_tilt=0)
-        elif request.form.get('right') == 'Right':
             Cam.adjust_angles(delta_pan=5, delta_tilt=0)
+        elif request.form.get('right') == 'Right':
+            Cam.adjust_angles(delta_pan=-5, delta_tilt=0)
         elif request.form.get('up') == 'Up':
             Cam.adjust_angles(delta_pan=0, delta_tilt=-5)
         elif request.form.get('down') == 'Down':
