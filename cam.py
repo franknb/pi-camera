@@ -4,7 +4,7 @@ from picamera2 import Picamera2, Preview
 from libcamera import Transform
 import cv2
 from servo import Servo
-from flask import Flask, render_template, Response, request, jsonify
+from flask import Flask, render_template, Response, request, jsonify, make_response
 
 app = Flask(__name__)
 
@@ -18,9 +18,15 @@ def gen():
             time.sleep(0.01)
             continue
         # frame must be BGR for cv2.imencode
-        jpg_bytes = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 80])[1].tobytes()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + jpg_bytes + b'\r\n')
+        jpg = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 80])[1]
+        jpg_bytes = jpg.tobytes()
+        headers = (
+            b'--frame\r\n'
+            b'Content-Type: image/jpeg\r\n'
+            + f'Content-Length: {len(jpg_bytes)}\r\n'.encode('ascii') +
+            b'\r\n'
+        )
+        yield headers + jpg_bytes + b'\r\n'
 
 
 @app.route('/')
@@ -30,7 +36,7 @@ def index():
 
 @app.route('/video_feed')
 def video_feed():
-    response = Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    response = Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame', direct_passthrough=True)
     return response
 
 
@@ -76,6 +82,16 @@ def web_camera_start():
         app.run(host='0.0.0.0', port=9000, threaded=True, debug=False)
     except Exception as e:
         print(e)
+
+
+@app.after_request
+def add_stream_headers(response):
+    # Improve compatibility with browsers/reverse proxies buffering MJPEG
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    response.headers['X-Accel-Buffering'] = 'no'  # nginx
+    return response
 
 
 class Cam:
