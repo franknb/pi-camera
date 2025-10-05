@@ -121,7 +121,7 @@ class Cam:
         # Try to initialize detector (optional)
         if Cam.detector is None:
             try:
-                Cam.detector = YoloV5OnnxDetector(model_path='models/yolov5n.onnx', conf_threshold=0.35, iou_threshold=0.45, input_size=416)
+                Cam.detector = YoloV5OnnxDetector(model_path='models/yolov5n.onnx', conf_threshold=0.35, iou_threshold=0.45, input_size=640)
                 print('YOLOv5n ONNX detector loaded')
             except Exception as e:
                 print('Detector not available:', e)
@@ -197,8 +197,14 @@ class YoloV5OnnxDetector:
         'oven','toaster','sink','refrigerator','book','clock','vase','scissors','teddy bear','hair drier','toothbrush'
     ]
 
-    def __init__(self, model_path: str, conf_threshold: float = 0.35, iou_threshold: float = 0.45, input_size: int = 416):
+    def __init__(self, model_path: str, conf_threshold: float = 0.35, iou_threshold: float = 0.45, input_size: int = 640):
         self.net = cv2.dnn.readNetFromONNX(model_path)
+        # Force CPU backend/target for compatibility
+        try:
+            self.net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
+            self.net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
+        except Exception:
+            pass
         self.conf_threshold = conf_threshold
         self.iou_threshold = iou_threshold
         self.input_size = input_size  # square size
@@ -208,7 +214,11 @@ class YoloV5OnnxDetector:
         size = self.input_size
         blob = cv2.dnn.blobFromImage(image_bgr, scalefactor=1/255.0, size=(size, size), mean=(0,0,0), swapRB=True, crop=False)
         self.net.setInput(blob)
-        preds = self.net.forward()  # shape: (1, N, 85) for yolov5
+        try:
+            preds = self.net.forward()
+        except Exception as e:
+            # If the ONNX opset is incompatible, fail gracefully
+            return []
         preds = np.squeeze(preds, axis=0)
 
         boxes = []

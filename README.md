@@ -46,5 +46,6 @@ wget -O models/yolov5n.onnx https://github.com/ultralytics/yolov5/releases/downl
 3) Start the app normally. If the model file exists, detections run every few frames and boxes/labels are drawn on the stream.
 
 Notes:
+- Use the v6.0 YOLOv5n ONNX linked above; other ONNX exports may hit OpenCV DNN shape errors. The code uses 640x640 input size for compatibility.
 - If performance is low, reduce `detection_every_n_frames` or set a smaller `input_size` (e.g., 320).
 - To disable detection, remove the model file or set `Cam.detector = None` early in `camera_start()`.
